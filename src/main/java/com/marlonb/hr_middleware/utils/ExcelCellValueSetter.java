@@ -1,0 +1,22 @@
+package com.marlonb.hr_middleware.utils;
+
+import com.marlonb.hr_middleware.model.user.Employee;
+import org.apache.poi.ss.usermodel.Row;
+
+import static com.marlonb.hr_middleware.utils.ExcelCellValueHelper.*;
+
+public class ExcelCellValueSetter {
+
+    public static Employee mapRowToEmployee (Row row) {
+
+        Employee data = new Employee();
+
+        data.setName(getCellValueAsString(row.getCell(0)));
+        data.setDepartment(getCellValueAsString(row.getCell(1)));
+        data.setTimeIn(getCellValueAsLocalTime(row.getCell(2)));
+        data.setTimeOut(getCellValueAsLocalTime(row.getCell(3)));
+        data.setStatus(getCellValueAsString(row.getCell(4)));
+
+        return data;
+    }
+}
