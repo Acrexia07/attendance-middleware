@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExcelReaderUnitTests {
@@ -38,10 +40,12 @@ public class ExcelReaderUnitTests {
         @DisplayName("Batch(Reader): Should fail if excel file path is invalid")
         void shouldFailIfExcelFilePathIsInvalid () throws Exception {
 
-            assertThrows(RuntimeException.class, () -> {
+            RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
                ExcelReader invalidReader = new ExcelReader("invalid-file-path.xlsx");
                invalidReader.read();
             });
+
+            assertInstanceOf(IOException.class, thrown.getCause());
         }
     }
 }
