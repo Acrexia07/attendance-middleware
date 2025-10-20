@@ -1,6 +1,6 @@
 package com.marlonb.hr_middleware.test_data;
 
-import com.marlonb.hr_middleware.model.entity.Employee;
+import com.marlonb.hr_middleware.model.user.Employee;
 
 import java.time.LocalTime;
 
