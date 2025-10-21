@@ -22,16 +22,20 @@
 
 **💭 My thought process:** Since I will be adding admin for this, I will be adding JWT Implementation first for now.
 
-**📌 Next Step:** JWT Implementation
+**📌 Next Step:** Preparation for JWT Implementation
 
 ---
-### Day 2: JWT Implementation
+### Day 2: Preparation for JWT Implementation
 **📅 Date:** October 21, 2025
 
 **🎯 Objectives:**
 - Create `JwtService` to implement JWT.
+- Add customize exception and user details service
 
 **📝 Implementation Summary:**
+- Created `JwtService` to implement JWT.
+- Added customize exception and user details service
 
+**💭 My thought process:** I will continue to add JwtFilter after creating a custom user details service
 
-**💭 My thought process:** 
+**📌 Next Step:** Preparation for JWT Implementation - Continuation
