@@ -1,6 +1,6 @@
 package com.marlonb.hr_middleware.elements;
 
-import com.marlonb.hr_middleware.model.user.Employee;
+import com.marlonb.hr_middleware.model.data.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -1,4 +1,4 @@
-package com.marlonb.hr_middleware.model.user;
+package com.marlonb.hr_middleware.model.data;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

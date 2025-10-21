@@ -1,6 +1,6 @@
 package com.marlonb.hr_middleware.elements;
 
-import com.marlonb.hr_middleware.model.user.Employee;
+import com.marlonb.hr_middleware.model.data.Employee;
 import com.marlonb.hr_middleware.utils.ExcelCellValueSetter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;

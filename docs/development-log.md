@@ -5,7 +5,6 @@
 - [Day 1: Project Initialization](#day-1-project-initialization)
 
 ---
-
 ### Day 1: Project Initialization
 **📅 Date:** October 20, 2025
 
@@ -21,4 +20,18 @@
 - Connect Microsoft SQL Server to the project.
 - Implemented Spring Batch configuration starting with `ItemReader`.
 
-**📌 Next Step:** Implementation of other batch elements
+**💭 My thought process:** Since I will be adding admin for this, I will be adding JWT Implementation first for now.
+
+**📌 Next Step:** JWT Implementation
+
+---
+### Day 2: JWT Implementation
+**📅 Date:** October 21, 2025
+
+**🎯 Objectives:**
+- Create `JwtService` to implement JWT.
+
+**📝 Implementation Summary:**
+
+
+**💭 My thought process:** 

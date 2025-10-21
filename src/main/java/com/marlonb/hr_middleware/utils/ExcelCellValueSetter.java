@@ -1,6 +1,6 @@
 package com.marlonb.hr_middleware.utils;
 
-import com.marlonb.hr_middleware.model.user.Employee;
+import com.marlonb.hr_middleware.model.data.Employee;
 import org.apache.poi.ss.usermodel.Row;
 
 import static com.marlonb.hr_middleware.utils.ExcelCellValueHelper.*;
