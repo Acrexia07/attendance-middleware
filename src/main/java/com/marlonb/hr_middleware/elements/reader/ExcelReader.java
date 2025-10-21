@@ -1,6 +1,6 @@
-package com.marlonb.hr_middleware.elements;
+package com.marlonb.hr_middleware.elements.reader;
 
-import com.marlonb.hr_middleware.model.data.Employee;
+import com.marlonb.hr_middleware.model.data.AttendanceData;
 import com.marlonb.hr_middleware.utils.ExcelCellValueSetter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @Slf4j
-public class ExcelReader implements ItemReader<Employee> {
+public class ExcelReader implements ItemReader<AttendanceData> {
 
     // Initialize Attributes
     private final String filePath;
@@ -46,7 +46,7 @@ public class ExcelReader implements ItemReader<Employee> {
 
     // Read operation
     @Override
-    public Employee read() throws Exception {
+    public AttendanceData read() throws Exception {
 
         // Close workbook if there's no data
         if (currentRow > lastRow) {
@@ -63,10 +63,10 @@ public class ExcelReader implements ItemReader<Employee> {
         }
 
         // If not empty row, proceed to mapping excel to employee entity
-        Employee data = ExcelCellValueSetter.mapRowToEmployee(row);
+        AttendanceData data = ExcelCellValueSetter.mapRowToEmployee(row);
 
         // Display message with name info per mapped row
-        log.info("Read row {}: {}", currentRow - 1, data.getName());
+        log.info("Read row {}: {}", currentRow - 1, data.getEmployeeName());
         return data;
     }
 }

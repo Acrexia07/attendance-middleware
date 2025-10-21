@@ -1,6 +1,7 @@
 package com.marlonb.hr_middleware.elements;
 
-import com.marlonb.hr_middleware.model.data.Employee;
+import com.marlonb.hr_middleware.elements.reader.ExcelReader;
+import com.marlonb.hr_middleware.model.data.AttendanceData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,10 +27,10 @@ public class ExcelReaderUnitTests {
         @DisplayName("Batch(Reader): Should read excel data successfully")
         void shouldReadExcelDataSuccessfully () throws Exception {
 
-            Employee item = reader.read();
+            AttendanceData item = reader.read();
 
             assertNotNull(item);
-            assertEquals("Chris Smith", item.getName());
+            assertEquals("Chris Smith", item.getEmployeeName());
         }
     }
 

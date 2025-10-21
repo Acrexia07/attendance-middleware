@@ -34,8 +34,13 @@
 
 **📝 Implementation Summary:**
 - Created `JwtService` to implement JWT.
-- Added customize exception and user details service
+- Added customize exception and user details service.
+- Redefine all my project plans and separate them by `md files`.
+- Update entity and attributes from data folder after refining my project plans
 
-**💭 My thought process:** I will continue to add JwtFilter after creating a custom user details service
+**💭 My thought process:** I will continue to add JwtFilter after creating a custom user details service. 
+I suddenly think about refining my project plans so that I can know right now as early about my 
+limitations and features in this project. That's why, I add some statements on the `Implementation summary` that are 
+not in the objectives and I will continue my project planning on the next day. 
 
-**📌 Next Step:** Preparation for JWT Implementation - Continuation
+**📌 Next Step:** Project Planning and Documentation - Continuation
