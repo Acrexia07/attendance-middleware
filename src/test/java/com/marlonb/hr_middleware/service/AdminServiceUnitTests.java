@@ -1,5 +1,6 @@
 package com.marlonb.hr_middleware.service;
 
+import com.marlonb.hr_middleware.exception.custom.DuplicateResourceFoundException;
 import com.marlonb.hr_middleware.model.admin.AdminAccount;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.marlonb.hr_middleware.test_assertions.AdminAssertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,6 +62,24 @@ public class AdminServiceUnitTests {
             AdminResponseDto actualResponse = adminService.createAdmin(testAdminRequest);
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, expectedResponse);
+        }
+    }
+
+    @Nested
+    class NegativeTests {
+
+        @Test
+        @DisplayName("Should fail if username already exists")
+        void shouldFailIfUsernameAlreadyExists () {
+
+            when(adminMapper.toEntity(any(AdminRequestDto.class)))
+                    .thenReturn(testAdmin);
+
+            when(adminRepository.existsByUsername("Admin1"))
+                    .thenReturn(true);
+
+            assertThrows(DuplicateResourceFoundException.class,
+                    () -> adminService.createAdmin(testAdminRequest));
         }
     }
 }
