@@ -5,9 +5,9 @@ technology stack or database engine.
 
 ---
 ## Model and Attributes
-I will only these models: HR Admin model, Attendance Data model, Employee Profile Model, and Department Model.
+I will only these models: Admin Account model, Attendance Data model, Employee Profile Model, and Department Model.
 
-### 👤 HR Admin Model
+### 👤 Admin Account Model
 Represents an authenticated admin individual who has the authority to 
 upload attendance data and view attendance analytics.
 #### Attributes:
