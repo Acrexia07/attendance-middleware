@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import static com.marlonb.hr_middleware.enums.ErrorMessages.*;
+import static com.marlonb.hr_middleware.message.ErrorMessages.*;
 
 @Service
 @RequiredArgsConstructor

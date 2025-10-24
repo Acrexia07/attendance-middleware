@@ -40,7 +40,7 @@ public class JwtService {
     }
 
     // Generates a signed JWT token for the given username,
-    // including any additional claims, issued-at time, and expiration.\
+    // including any additional claims, issued-at time, and expiration.
     public String generateToken(Map<String, Object> extraClaims, String username) {
 
         long now = System.currentTimeMillis();
