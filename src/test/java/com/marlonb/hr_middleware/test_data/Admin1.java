@@ -4,6 +4,7 @@ import com.marlonb.hr_middleware.model.admin.AdminAccount;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
 import com.marlonb.hr_middleware.model.dto.AdminUpdateDto;
+import com.marlonb.hr_middleware.model.dto.LoginRequestDto;
 
 import java.time.LocalDateTime;
 
@@ -54,6 +55,15 @@ public class Admin1 {
         return new AdminUpdateDto(
                 UPDATE_ADMIN_USERNAME,
                 UPDATE_ADMIN_PASSWORD
+        );
+    }
+
+    // LOGIN REQUEST
+    public static LoginRequestDto sampleLoginRequest () {
+
+        return new LoginRequestDto(
+                sampleAdmin1Data().getUsername(),
+                sampleAdmin1Data().getPassword()
         );
     }
 }

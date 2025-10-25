@@ -15,7 +15,7 @@ import static com.marlonb.hr_middleware.message.ErrorMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class authService {
+public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;

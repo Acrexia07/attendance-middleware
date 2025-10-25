@@ -1,7 +1,7 @@
 package com.marlonb.hr_middleware.controller;
 
 import com.marlonb.hr_middleware.model.dto.LoginRequestDto;
-import com.marlonb.hr_middleware.service.authService;
+import com.marlonb.hr_middleware.service.AuthService;
 import com.marlonb.hr_middleware.utils.ResponseMessageDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import static com.marlonb.hr_middleware.message.SuccessfulMessages.*;
 @RequestMapping("batch/v1")
 public class AuthController {
 
-    private final authService authService;
+    private final AuthService authService;
 
     @PostMapping("/admin/login")
     public ResponseEntity<ResponseMessageDto<String>> loginAdmin (@Valid @RequestBody
