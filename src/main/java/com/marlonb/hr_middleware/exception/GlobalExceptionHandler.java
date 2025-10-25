@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -44,6 +45,21 @@ public class GlobalExceptionHandler {
                                      HttpStatus.CONFLICT.value(),
                                      DUPLICATE_RESOURCE_ERROR_MESSAGE.getErrorMessage(),
                                      Map.of(RESOURCE_KEY_VALUE.getKeyValue(), List.of(ex.getMessage())),
+                                     request.getRequestURI()
+                             ));
+    }
+
+    // HTTP STATUS CODE: 401 - UNAUTHORIZED
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handlesInvalidCredentialExceptions (BadCredentialsException ex,
+                                                                                HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(new ErrorResponseDto(
+                                     LocalDateTime.now(),
+                                     HttpStatus.UNAUTHORIZED.value(),
+                                     UNAUTHORIZED_ERROR_MESSAGE.getErrorMessage(),
+                                     Map.of(CREDENTIALS_KEY_VALUE.getKeyValue(), List.of(ex.getMessage())),
                                      request.getRequestURI()
                              ));
     }

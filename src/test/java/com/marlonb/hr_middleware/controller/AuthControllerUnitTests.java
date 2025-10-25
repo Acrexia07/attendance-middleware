@@ -17,10 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import static com.marlonb.hr_middleware.message.ErrorMessages.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,10 +50,12 @@ public class AuthControllerUnitTests {
     private AdminUserDetailsService adminUserDetailsService;
 
     private LoginRequestDto testLogin;
+    private LoginRequestDto invalidTestLogin;
 
     @BeforeEach
     void initSetup () {
         testLogin = Admin1.sampleLoginRequest();
+        invalidTestLogin = Admin1.sampleInvalidLoginRequest();
     }
 
     @Nested
@@ -79,5 +83,26 @@ public class AuthControllerUnitTests {
                             jsonPath("$.response").value(expectedToken));
         }
 
+    }
+
+    @Nested
+    class NegativeTests {
+
+        @Test
+        @DisplayName("Should fail to login when admin has invalid credentials")
+        void shouldThrowAnErrorOnInvalidCredentials () throws Exception {
+
+            when(authService.verifyUserCredentials(invalidTestLogin))
+                    .thenThrow(new BadCredentialsException(INVALID_CREDENTIALS_FOUND.getErrorMessage()));
+
+            String jsonInvalidCredentials = mapper.writeValueAsString(invalidTestLogin);
+
+            mockMvc.perform(post("/batch/v1/admin/login")
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonInvalidCredentials))
+                   .andExpectAll(
+                           status().isUnauthorized());
+        }
     }
 }

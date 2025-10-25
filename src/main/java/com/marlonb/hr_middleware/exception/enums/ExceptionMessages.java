@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ExceptionMessages {
     INTERNAL_SERVER_ERROR_MESSAGE("Internal server error"),
-    DUPLICATE_RESOURCE_ERROR_MESSAGE("Resource Duplication found");
+    DUPLICATE_RESOURCE_ERROR_MESSAGE("Resource Duplication found"),
+    UNAUTHORIZED_ERROR_MESSAGE("Unauthorized credentials");
     private final String errorMessage;
 }

@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum KeyResponse {
     SERVER_KEY_VALUE("server"),
-    RESOURCE_KEY_VALUE("resource");
+    RESOURCE_KEY_VALUE("resource"),
+    CREDENTIALS_KEY_VALUE("credentials");
 
     private final String keyValue;
 }

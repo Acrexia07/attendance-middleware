@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 public class Admin1 {
 
+    // BASE VALUES
     private static final AdminAccount BASE_ADMIN;
     private static final Long ADMIN_ID = 2L;
     private static final String ADMIN_USERNAME = "Admin1";
@@ -20,6 +21,9 @@ public class Admin1 {
     // UPDATED VALUES
     private static final String UPDATE_ADMIN_USERNAME = "admin@123";
     private static final String UPDATE_ADMIN_PASSWORD = "test@123";
+
+    // INVALID VALUES
+    private static final String INVALID_ADMIN_PASSWORD = "invalidPass";
 
     static {
         BASE_ADMIN = new AdminAccount();
@@ -64,6 +68,14 @@ public class Admin1 {
         return new LoginRequestDto(
                 sampleAdmin1Data().getUsername(),
                 sampleAdmin1Data().getPassword()
+        );
+    }
+
+    public static LoginRequestDto sampleInvalidLoginRequest () {
+
+        return new LoginRequestDto(
+                sampleAdmin1Data().getUsername(),
+                INVALID_ADMIN_PASSWORD
         );
     }
 }
