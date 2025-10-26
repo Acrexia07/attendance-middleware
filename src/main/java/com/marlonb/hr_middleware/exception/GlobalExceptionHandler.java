@@ -1,6 +1,7 @@
 package com.marlonb.hr_middleware.exception;
 
 import com.marlonb.hr_middleware.exception.custom.DuplicateResourceFoundException;
+import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,21 @@ public class GlobalExceptionHandler {
                                      LocalDateTime.now(),
                                      HttpStatus.CONFLICT.value(),
                                      DUPLICATE_RESOURCE_ERROR_MESSAGE.getErrorMessage(),
+                                     Map.of(RESOURCE_KEY_VALUE.getKeyValue(), List.of(ex.getMessage())),
+                                     request.getRequestURI()
+                             ));
+    }
+
+    // HTTP STATUS CODE: 404 - NOT FOUND
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handlesResourceNotFoundExceptions (ResourceNotFoundException ex,
+                                                                               HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                             .body(new ErrorResponseDto(
+                                     LocalDateTime.now(),
+                                     HttpStatus.NOT_FOUND.value(),
+                                     RESOURCE_NOT_FOUND_MESSAGE.getErrorMessage(),
                                      Map.of(RESOURCE_KEY_VALUE.getKeyValue(), List.of(ex.getMessage())),
                                      request.getRequestURI()
                              ));
