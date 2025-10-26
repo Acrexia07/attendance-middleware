@@ -1,6 +1,7 @@
 package com.marlonb.hr_middleware.service;
 
 import com.marlonb.hr_middleware.exception.custom.DuplicateResourceFoundException;
+import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
 import com.marlonb.hr_middleware.model.admin.AdminAccount;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.marlonb.hr_middleware.test_assertions.AdminAssertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,11 +42,12 @@ public class AdminServiceUnitTests {
     private AdminAccount testAdmin;
     private AdminRequestDto testAdminRequest;
     private AdminResponseDto testAdminResponse;
+    private long testAdminId;
 
     @BeforeEach
     void initSetup () {
         testAdmin = Admin1.sampleAdmin1Data();
-        final long testAdminId = testAdmin.getId();
+        testAdminId = testAdmin.getId();
         testAdminRequest = Admin1.sampleAdmin1Request();
         testAdminResponse = Admin1.sampleAdmin1Response();
     }
@@ -95,6 +98,21 @@ public class AdminServiceUnitTests {
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, listOfAdminResponses);
         }
+
+        @Test
+        @DisplayName("Should retrieve specific admin data successfully")
+        void shouldRetrieveSpecificAdminDataSuccessfully () {
+
+            when(adminRepository.findById(testAdminId))
+                    .thenReturn(Optional.of(testAdmin));
+
+            when(adminMapper.toResponse(testAdmin))
+                    .thenReturn(testAdminResponse);
+
+            AdminResponseDto actualResponse = adminService.retrieveSpecificAdmin(testAdminId);
+
+            assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponse);
+        }
     }
 
     @Nested
@@ -112,6 +130,19 @@ public class AdminServiceUnitTests {
 
             assertThrows(DuplicateResourceFoundException.class,
                     () -> adminService.createAdmin(testAdminRequest));
+        }
+
+        @Test
+        @DisplayName("Should fail to read specific admin if id not exists")
+        void shouldFailToReadSpecificAdminIfIdNotExists () {
+
+            final long nonExistentId = 999L;
+
+            when(adminRepository.findById(nonExistentId))
+                    .thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class,
+                         () -> adminService.retrieveSpecificAdmin(nonExistentId));
         }
     }
 }
