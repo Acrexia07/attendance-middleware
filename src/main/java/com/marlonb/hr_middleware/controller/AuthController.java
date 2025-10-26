@@ -2,7 +2,7 @@ package com.marlonb.hr_middleware.controller;
 
 import com.marlonb.hr_middleware.model.dto.LoginRequestDto;
 import com.marlonb.hr_middleware.service.AuthService;
-import com.marlonb.hr_middleware.utils.ResponseMessageDto;
+import com.marlonb.hr_middleware.utils.TokenResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/admin/login")
-    public ResponseEntity<ResponseMessageDto<String>> loginAdmin (@Valid @RequestBody
+    public ResponseEntity<TokenResponseDto<String>> loginAdmin (@Valid @RequestBody
                                                                       LoginRequestDto loginRequest) {
 
         String outputResponse = authService.verifyUserCredentials(loginRequest);
 
-        return ResponseEntity.ok().body(new ResponseMessageDto<>(
+        return ResponseEntity.ok().body(new TokenResponseDto<>(
                                             LOGIN_SUCCESS_MESSAGE.getMessage(),
                                             outputResponse));
     }

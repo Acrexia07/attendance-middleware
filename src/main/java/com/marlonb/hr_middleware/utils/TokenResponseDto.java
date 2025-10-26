@@ -1,6 +1,7 @@
 package com.marlonb.hr_middleware.utils;
 
-public record ResponseMessageDto<T> (
+public record TokenResponseDto<T>(
         String message,
-        T data
-) {}
+        T token
+) {
+}

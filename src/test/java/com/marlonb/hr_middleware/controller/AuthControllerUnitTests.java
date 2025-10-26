@@ -27,7 +27,7 @@ import static com.marlonb.hr_middleware.message.ErrorMessages.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,10 +79,11 @@ public class AuthControllerUnitTests {
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(jsonValidCredentials))
+                    .andDo(print())
                    .andExpectAll(
                             status().isOk(),
                             jsonPath("$.message").value("Admin login successfully"),
-                            jsonPath("$.response").value(expectedToken));
+                            jsonPath("$.token").value(expectedToken));
         }
 
     }
