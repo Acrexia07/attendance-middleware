@@ -9,11 +9,12 @@ import com.marlonb.hr_middleware.model.mapper.AdminMapper;
 import com.marlonb.hr_middleware.repository.AdminRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 import static com.marlonb.hr_middleware.message.ErrorMessages.*;
 
@@ -41,5 +42,15 @@ public class AdminService {
         AdminAccount savedRepository = adminRepository.save(createdAdmin);
 
         return adminMapper.toResponse(savedRepository);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AdminResponseDto> retrieveAllAdminData() {
+
+        List<AdminAccount> listOfAdminData = adminRepository.findAll();
+
+        return listOfAdminData.stream()
+                              .map(adminMapper::toResponse)
+                              .toList();
     }
 }

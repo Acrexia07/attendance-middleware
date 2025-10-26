@@ -7,6 +7,7 @@ import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
 import com.marlonb.hr_middleware.model.mapper.AdminMapper;
 import com.marlonb.hr_middleware.repository.AdminRepository;
 import com.marlonb.hr_middleware.test_data.Admin1;
+import com.marlonb.hr_middleware.test_data.Admin2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 import static com.marlonb.hr_middleware.test_assertions.AdminAssertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +44,7 @@ public class AdminServiceUnitTests {
     @BeforeEach
     void initSetup () {
         testAdmin = Admin1.sampleAdmin1Data();
+        final long testAdminId = testAdmin.getId();
         testAdminRequest = Admin1.sampleAdmin1Request();
         testAdminResponse = Admin1.sampleAdmin1Response();
     }
@@ -66,6 +70,31 @@ public class AdminServiceUnitTests {
             assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponse);
         }
 
+        @Test
+        @DisplayName("Should retrieve all admin data successfully")
+        void shouldRetrieveAllAdminDataSuccessfully () {
+
+            AdminAccount testAdmin2 = Admin2.sampleAdmin2Data();
+            AdminResponseDto testAdminResponse2 = Admin2.sampleAdmin2Response();
+
+            List<AdminAccount> listOfAdminData =
+                    List.of(testAdmin, testAdmin2);
+            List<AdminResponseDto> listOfAdminResponses =
+                    List.of(testAdminResponse, testAdminResponse2);
+
+            when(adminRepository.findAll())
+                    .thenReturn(listOfAdminData);
+
+            when(adminMapper.toResponse(testAdmin))
+                    .thenReturn(testAdminResponse);
+
+            when(adminMapper.toResponse(testAdmin2))
+                    .thenReturn(testAdminResponse2);
+
+            List<AdminResponseDto> actualResponse = adminService.retrieveAllAdminData();
+
+            assertAdminServiceReturnedExpectedResponse(actualResponse, listOfAdminResponses);
+        }
     }
 
     @Nested
