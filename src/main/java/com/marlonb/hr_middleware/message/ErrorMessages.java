@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorMessages {
     USER_NOT_FOUND("User not found"),
     INVALID_CREDENTIALS_FOUND("Invalid username or password"),
-    DUPLICATE_RESOURCE_FOUND("This username %s already exists");
+    DUPLICATE_RESOURCE_FOUND("This username %s already exists"),
+    RESOURCE_NOT_FOUND("This admin id '%d' does not exist");
     private final String errorMessage;
 }

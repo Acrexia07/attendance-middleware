@@ -2,6 +2,7 @@ package com.marlonb.hr_middleware.service;
 
 
 import com.marlonb.hr_middleware.exception.custom.DuplicateResourceFoundException;
+import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
 import com.marlonb.hr_middleware.model.admin.AdminAccount;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
@@ -52,5 +53,20 @@ public class AdminService {
         return listOfAdminData.stream()
                               .map(adminMapper::toResponse)
                               .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public AdminResponseDto retrieveSpecificAdmin(long id) {
+
+        AdminAccount foundAdmin = findAdminId(id);
+        return adminMapper.toResponse(foundAdmin);
+    }
+
+    // HELPER: FIND ADMIN ACCOUNT BY ID
+    protected AdminAccount findAdminId(long id) {
+
+        return adminRepository.findById(id)
+                              .orElseThrow(() -> new ResourceNotFoundException
+                                            (String.format(RESOURCE_NOT_FOUND.getErrorMessage(), id)));
     }
 }

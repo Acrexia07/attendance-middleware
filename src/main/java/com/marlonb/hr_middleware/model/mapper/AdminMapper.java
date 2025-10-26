@@ -12,7 +12,6 @@ import org.mapstruct.*;
 )
 public interface AdminMapper {
 
-    @Mapping(target = "id", ignore = true)
     AdminResponseDto toResponse (AdminAccount adminAccount);
 
     @Mapping(target = "id", ignore = true)
