@@ -5,6 +5,7 @@ import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
 import com.marlonb.hr_middleware.model.dto.AdminUpdateDto;
 import com.marlonb.hr_middleware.model.dto.LoginRequestDto;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,8 @@ public class Admin1 {
 
     // INVALID VALUES
     private static final String INVALID_ADMIN_PASSWORD = "invalidPass";
+    private static final String INVALID_ADMIN_USERNAME_FORMAT = "a";
+    private static final String INVALID_ADMIN_PASSWORD_FORMAT = "b";
 
     static {
         BASE_ADMIN = new AdminAccount();
