@@ -1,15 +1,19 @@
 package com.marlonb.hr_middleware.exception;
 
 import com.marlonb.hr_middleware.exception.custom.DuplicateResourceFoundException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +64,39 @@ public class GlobalExceptionHandler {
                                      HttpStatus.UNAUTHORIZED.value(),
                                      UNAUTHORIZED_ERROR_MESSAGE.getErrorMessage(),
                                      Map.of(CREDENTIALS_KEY_VALUE.getKeyValue(), List.of(ex.getMessage())),
+                                     request.getRequestURI()
+                             ));
+    }
+
+    // HTTP STATUS CODE: 400 - BAD REQUEST
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> handlesAttributeValidationExceptions (MethodArgumentNotValidException ex,
+                                                                                  HttpServletRequest request) {
+
+        Map<String, List<String>> fieldErrors = new HashMap<>();
+
+        // Extract all field validation errors from the exception
+        ex.getBindingResult()
+          .getFieldErrors()
+          .forEach(error -> {
+                // Field that failed validation
+                String fieldName = error.getField();
+                // Validation message associated with that field
+                String fieldMessage = error.getDefaultMessage();
+
+                // Group messages by field name
+                // If the field doesn't exist in the map yet, initialize a new list
+                fieldErrors.computeIfAbsent(fieldName, fieldElement -> new ArrayList<>())
+                           .add(fieldMessage);
+          });
+
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(new ErrorResponseDto(
+                                     LocalDateTime.now(),
+                                     HttpStatus.BAD_REQUEST.value(),
+                                     VALIDATION_ERROR_MESSAGE.getErrorMessage(),
+                                     fieldErrors,
                                      request.getRequestURI()
                              ));
     }

@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ExceptionMessages {
     INTERNAL_SERVER_ERROR_MESSAGE("Internal server error"),
     DUPLICATE_RESOURCE_ERROR_MESSAGE("Resource Duplication found"),
-    UNAUTHORIZED_ERROR_MESSAGE("Unauthorized credentials");
+    UNAUTHORIZED_ERROR_MESSAGE("Unauthorized credentials"),
+    VALIDATION_ERROR_MESSAGE("Validation error");
     private final String errorMessage;
 }
