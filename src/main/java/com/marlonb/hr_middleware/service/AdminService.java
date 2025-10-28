@@ -80,6 +80,12 @@ public class AdminService {
         return adminMapper.toResponse(savedUpdatedAdmin);
     }
 
+    public void deleteAdmin(long id) {
+
+        findAdminId(id);
+        adminRepository.deleteById(id);
+    }
+
     // HELPER: FIND ADMIN ACCOUNT BY ID
     protected AdminAccount findAdminId(long id) {
 

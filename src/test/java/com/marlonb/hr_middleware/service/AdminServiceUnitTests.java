@@ -141,6 +141,19 @@ public class AdminServiceUnitTests {
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponseAfterUpdate);
         }
+
+        @Test
+        @DisplayName("Should soft delete specific admin data successfully")
+        void shouldSoftDeleteSpecificAdminDataSuccessfully () {
+
+            when(adminRepository.findById(testAdminId))
+                    .thenReturn(Optional.of(testAdmin));
+
+            adminService.deleteAdmin(testAdminId);
+
+            verify(adminRepository, times(1)).findById(testAdminId);
+            verify(adminRepository, times(1)).deleteById(testAdminId);
+        }
     }
 
     @Nested
@@ -185,6 +198,21 @@ public class AdminServiceUnitTests {
 
             assertThrows(DuplicateResourceFoundException.class,
                     () -> adminService.updateAdmin(testAdminId, testAdminUpdate));
+        }
+
+        @Test
+        @DisplayName("Should fail to delete admin if id not exists")
+        void shouldFailToDeleteAdminIfIdNotExists () {
+
+            final long nonExistentId = 999L;
+
+            when(adminRepository.findById(nonExistentId))
+                    .thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class,
+                         () -> adminService.deleteAdmin(nonExistentId));
+
+            verify(adminRepository).findById(nonExistentId);
         }
     }
 }
