@@ -4,8 +4,7 @@ package com.marlonb.hr_middleware.service;
 import com.marlonb.hr_middleware.exception.custom.DuplicateResourceFoundException;
 import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
 import com.marlonb.hr_middleware.model.admin.AdminAccount;
-import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
-import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
+import com.marlonb.hr_middleware.model.dto.*;
 import com.marlonb.hr_middleware.model.mapper.AdminMapper;
 import com.marlonb.hr_middleware.repository.AdminRepository;
 import jakarta.validation.Valid;
@@ -60,6 +59,25 @@ public class AdminService {
 
         AdminAccount foundAdmin = findAdminId(id);
         return adminMapper.toResponse(foundAdmin);
+    }
+
+    public AdminResponseDto updateAdmin(long id, AdminUpdateDto adminUpdate) {
+
+        AdminAccount foundAdmin = findAdminId(id);
+
+        // Validation: Check if the updated admin's username already exists in database
+        //             and is different from the current admin's username
+        if (adminRepository.existsByUsername(adminUpdate.getUsername()) &&
+                !foundAdmin.getUsername().equalsIgnoreCase(adminUpdate.getUsername())) {
+
+            throw new DuplicateResourceFoundException
+                    (String.format(DUPLICATE_RESOURCE_FOUND.getErrorMessage(), adminUpdate.getUsername()));
+        }
+
+        adminMapper.toUpdateFromEntity(foundAdmin, adminUpdate);
+        AdminAccount savedUpdatedAdmin = adminRepository.save(foundAdmin);
+
+        return adminMapper.toResponse(savedUpdatedAdmin);
     }
 
     // HELPER: FIND ADMIN ACCOUNT BY ID
