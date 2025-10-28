@@ -95,3 +95,26 @@ I will be testing it tomorrow.
 I will be testing it tomorrow.
 
 **📌 Next Step:** Implementation of `AdminAccount` services and controllers
+
+---
+### Day 4: Implementation of `AdminAccount` services and controllers
+**📅 Date:** October 27, 2025
+
+**🎯 Objectives:**
+- Implement service functions for admin services with CRUD operations.
+- Implement controller functions for crud operations.
+
+**📝 Implementation Summary:**
+- Implemented Pull Request Simulation in the project. 
+This will help me grasp the use case of this in a team collaboration setup. 
+- Developed and tested create admin service function `createAdmin`.
+- Conducted a pull request for create admin service implementation.
+- Reviewed and merge pull request for create admin implementation.
+- Conducted a pull request for added custom exception handler for `ResourceNotFoundException`.
+- Reviewed and merge pull request for custom exception handler.
+
+**💭 My thought process:** It's my first time to conduct pull request.
+Since I am doing this project on my own,
+I simulate a pull request by creating another account that act as collaborator and my main account as maintainer.
+
+**📌 Next Step:** Implementation of other admin service functions
