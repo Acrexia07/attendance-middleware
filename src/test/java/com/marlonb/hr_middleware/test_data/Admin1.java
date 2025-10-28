@@ -65,6 +65,25 @@ public class Admin1 {
         );
     }
 
+    // UPDATE ADMIN ACCOUNT
+    public static AdminAccount sampleAdmin1AfterUpdate () {
+        var updatedAdmin = new AdminAccount();
+        updatedAdmin.setId(ADMIN_ID);
+        updatedAdmin.setUsername(UPDATE_ADMIN_USERNAME);
+        updatedAdmin.setPassword(UPDATE_ADMIN_PASSWORD);
+        updatedAdmin.setCreatedAt(ADMIN_CREATION);
+        return updatedAdmin;
+    }
+
+    public static AdminResponseDto sampleAdmin1ResponseAfterUpdate () {
+
+        return new AdminResponseDto(
+                ADMIN_ID,
+                UPDATE_ADMIN_USERNAME,
+                ADMIN_CREATION
+        );
+    }
+
     // LOGIN REQUEST
     public static LoginRequestDto sampleLoginRequest () {
 

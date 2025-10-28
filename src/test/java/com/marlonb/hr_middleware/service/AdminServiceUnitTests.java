@@ -5,6 +5,7 @@ import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
 import com.marlonb.hr_middleware.model.admin.AdminAccount;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
+import com.marlonb.hr_middleware.model.dto.AdminUpdateDto;
 import com.marlonb.hr_middleware.model.mapper.AdminMapper;
 import com.marlonb.hr_middleware.repository.AdminRepository;
 import com.marlonb.hr_middleware.test_data.Admin1;
@@ -43,6 +44,9 @@ public class AdminServiceUnitTests {
     private AdminRequestDto testAdminRequest;
     private AdminResponseDto testAdminResponse;
     private long testAdminId;
+    private AdminUpdateDto testAdminUpdate;
+    private AdminAccount testAdminAfterUpdate;
+    private AdminResponseDto testAdminResponseAfterUpdate;
 
     @BeforeEach
     void initSetup () {
@@ -50,6 +54,10 @@ public class AdminServiceUnitTests {
         testAdminId = testAdmin.getId();
         testAdminRequest = Admin1.sampleAdmin1Request();
         testAdminResponse = Admin1.sampleAdmin1Response();
+
+        testAdminUpdate = Admin1.sampleAdmin1Update();
+        testAdminAfterUpdate = Admin1.sampleAdmin1AfterUpdate();
+        testAdminResponseAfterUpdate = Admin1.sampleAdmin1ResponseAfterUpdate();
     }
 
     @Nested
@@ -113,6 +121,26 @@ public class AdminServiceUnitTests {
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponse);
         }
+
+        @Test
+        @DisplayName("Should update specific admin data successfully")
+        void shouldUpdateSpecificAdminDataSuccessfully () {
+
+            when(adminRepository.findById(testAdminId))
+                    .thenReturn(Optional.of(testAdmin));
+
+            doNothing().when(adminMapper).toUpdateFromEntity(testAdmin, testAdminUpdate);
+
+            when(adminRepository.save(testAdmin))
+                    .thenReturn(testAdminAfterUpdate);
+
+            when(adminMapper.toResponse(testAdminAfterUpdate))
+                    .thenReturn(testAdminResponseAfterUpdate);
+
+            AdminResponseDto actualResponse = adminService.updateAdmin(testAdminId, testAdminUpdate);
+
+            assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponseAfterUpdate);
+        }
     }
 
     @Nested
@@ -143,6 +171,20 @@ public class AdminServiceUnitTests {
 
             assertThrows(ResourceNotFoundException.class,
                          () -> adminService.retrieveSpecificAdmin(nonExistentId));
+        }
+
+        @Test
+        @DisplayName("Should fail to update when username already exists")
+        void shouldFailToUpdateWhenUsernameAlreadyExists () {
+
+            when(adminRepository.findById(testAdminId))
+                    .thenReturn(Optional.of(testAdmin));
+
+            when(adminRepository.existsByUsername(testAdminUpdate.getUsername()))
+                    .thenReturn(true);
+
+            assertThrows(DuplicateResourceFoundException.class,
+                    () -> adminService.updateAdmin(testAdminId, testAdminUpdate));
         }
     }
 }
