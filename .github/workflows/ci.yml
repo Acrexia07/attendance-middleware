@@ -13,6 +13,7 @@ jobs:
     env:
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       JWT_EXPIRATION_TIME: ${{ secrets.JWT_EXPIRATION_TIME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
