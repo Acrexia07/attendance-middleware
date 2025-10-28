@@ -34,3 +34,6 @@ build/
 
 ### Environment ###
 .env
+
+### APPLICATION PROPERTIES (LOCAL PROFILE) ###
+src/main/resources/application-local.properties
