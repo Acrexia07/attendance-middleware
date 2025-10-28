@@ -19,8 +19,8 @@ public class JwtService {
     private final long expirationDate;
 
     // Constructor
-    public JwtService(@Value("${jwt.secret}") String secretKey,
-                      @Value("${jwt.expiration-ms}") Long expirationDate) {
+    public JwtService(@Value("${JWT_SECRET_KEY}") String secretKey,
+                      @Value("${JWT_EXPIRATION_TIME}") Long expirationDate) {
         this.secretKey = secretKey;
         this.expirationDate = expirationDate;
     }
