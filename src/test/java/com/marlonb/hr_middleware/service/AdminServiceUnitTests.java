@@ -10,10 +10,7 @@ import com.marlonb.hr_middleware.model.mapper.AdminMapper;
 import com.marlonb.hr_middleware.repository.AdminRepository;
 import com.marlonb.hr_middleware.test_data.Admin1;
 import com.marlonb.hr_middleware.test_data.Admin2;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -141,6 +138,26 @@ public class AdminServiceUnitTests {
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponseAfterUpdate);
         }
+
+        @Test
+        @DisplayName("Should soft delete specific admin successfully")
+        void shouldSoftDeleteSpecificAdminSuccessfully () {
+
+            when(adminRepository.findById(testAdminId))
+                    .thenReturn(Optional.of(testAdmin));
+
+            adminService.deleteAdmin(testAdminId);
+
+            verify(adminRepository, times(1)).findById(testAdminId);
+            verify(adminRepository, times(1)).deleteById(testAdminId);
+
+            // Assert the existence of soft deleted data on the database
+            List<AdminAccount> deletedList = List.of(testAdmin);
+            when(adminRepository.findAllDeleted()).thenReturn(deletedList);
+
+            List<AdminAccount> deletedAdmins = adminRepository.findAllDeleted();
+            assertFalse(deletedAdmins.isEmpty());
+        }
     }
 
     @Nested
@@ -185,6 +202,19 @@ public class AdminServiceUnitTests {
 
             assertThrows(DuplicateResourceFoundException.class,
                     () -> adminService.updateAdmin(testAdminId, testAdminUpdate));
+        }
+
+        @Test
+        @DisplayName("Should fail to delete when id not exists")
+        void shouldFailToDeleteWhenIdNotExists () {
+
+            final long nonExistentId = 999L;
+
+            when(adminRepository.findById(nonExistentId))
+                    .thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class,
+                         () -> adminService.deleteAdmin(nonExistentId));
         }
     }
 }
