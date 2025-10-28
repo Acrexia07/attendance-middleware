@@ -80,6 +80,13 @@ public class AdminService {
         return adminMapper.toResponse(savedUpdatedAdmin);
     }
 
+    @Transactional
+    public void deleteAdmin(long id) {
+
+        findAdminId(id);
+        adminRepository.deleteById(id);
+    }
+
     // HELPER: FIND ADMIN ACCOUNT BY ID
     protected AdminAccount findAdminId(long id) {
 
@@ -87,4 +94,5 @@ public class AdminService {
                               .orElseThrow(() -> new ResourceNotFoundException
                                             (String.format(RESOURCE_NOT_FOUND.getErrorMessage(), id)));
     }
+
 }
