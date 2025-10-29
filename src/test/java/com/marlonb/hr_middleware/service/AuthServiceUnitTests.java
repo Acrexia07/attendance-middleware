@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import static com.marlonb.hr_middleware.test_assertions.AdminAssertions.*;
@@ -28,6 +29,9 @@ public class AuthServiceUnitTests {
 
     @Mock
     private AdminMapper adminMapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AdminService adminService;

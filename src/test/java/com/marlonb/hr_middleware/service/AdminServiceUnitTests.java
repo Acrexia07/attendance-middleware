@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class AdminServiceUnitTests {
 
     @Mock
     private AdminMapper adminMapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AdminService adminService;
@@ -67,6 +71,12 @@ public class AdminServiceUnitTests {
             when(adminMapper.toEntity(any(AdminRequestDto.class)))
                     .thenReturn(testAdmin);
 
+            when(adminRepository.existsByUsername(anyString()))
+                    .thenReturn(false);
+
+            when(passwordEncoder.encode(anyString()))
+                    .thenReturn("hashed_password");
+
             when(adminRepository.save(any(AdminAccount.class)))
                     .thenReturn(testAdmin);
 
@@ -76,6 +86,10 @@ public class AdminServiceUnitTests {
             AdminResponseDto actualResponse = adminService.createAdmin(testAdminRequest);
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponse);
+
+            verify(passwordEncoder).encode(anyString());
+            verify(adminRepository).save(argThat(admin ->
+                    "hashed_password".equals(admin.getPassword())));
         }
 
         @Test
@@ -126,7 +140,14 @@ public class AdminServiceUnitTests {
             when(adminRepository.findById(testAdminId))
                     .thenReturn(Optional.of(testAdmin));
 
-            doNothing().when(adminMapper).toUpdateFromEntity(testAdmin, testAdminUpdate);
+            when(adminRepository.existsByUsername(anyString()))
+                    .thenReturn(false);
+
+            when(passwordEncoder.encode(anyString()))
+                    .thenReturn("hashed_password");
+
+            doNothing().when(adminMapper)
+                    .toUpdateFromEntity(testAdmin, testAdminUpdate);
 
             when(adminRepository.save(testAdmin))
                     .thenReturn(testAdminAfterUpdate);
@@ -137,6 +158,10 @@ public class AdminServiceUnitTests {
             AdminResponseDto actualResponse = adminService.updateAdmin(testAdminId, testAdminUpdate);
 
             assertAdminServiceReturnedExpectedResponse(actualResponse, testAdminResponseAfterUpdate);
+
+            verify(passwordEncoder).encode(anyString());
+            verify(adminRepository).save(argThat(admin ->
+                    "hashed_password".equals(admin.getPassword())));
         }
 
         @Test

@@ -9,7 +9,7 @@ import com.marlonb.hr_middleware.model.mapper.AdminMapper;
 import com.marlonb.hr_middleware.repository.AdminRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +25,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final AdminMapper adminMapper;
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder encoder;
 
     // PROCESS(CREATE): Create new admin credentials and pass it as response
     @Transactional
@@ -38,6 +38,10 @@ public class AdminService {
             throw new DuplicateResourceFoundException(String.format(DUPLICATE_RESOURCE_FOUND.getErrorMessage(),
                                                                     createdAdmin.getUsername()));
         }
+
+        // Encrypt password using BCrypt Password encoder
+        String hashedPassword = encoder.encode(createdAdmin.getPassword());
+        createdAdmin.setPassword(hashedPassword);
 
         AdminAccount savedRepository = adminRepository.save(createdAdmin);
 
@@ -65,7 +69,7 @@ public class AdminService {
 
         AdminAccount foundAdmin = findAdminId(id);
 
-        // Validation: Check if the updated admin's username already exists in database
+        // Validation: Check if the updated admin's username already exists in the database
         //             and is different from the current admin's username
         if (adminRepository.existsByUsername(adminUpdate.getUsername()) &&
                 !foundAdmin.getUsername().equalsIgnoreCase(adminUpdate.getUsername())) {
@@ -73,6 +77,10 @@ public class AdminService {
             throw new DuplicateResourceFoundException
                     (String.format(DUPLICATE_RESOURCE_FOUND.getErrorMessage(), adminUpdate.getUsername()));
         }
+
+        // Encrypt password using BCrypt Password encoder
+        String hashedPassword = encoder.encode(foundAdmin.getPassword());
+        foundAdmin.setPassword(hashedPassword);
 
         adminMapper.toUpdateFromEntity(foundAdmin, adminUpdate);
         AdminAccount savedUpdatedAdmin = adminRepository.save(foundAdmin);
