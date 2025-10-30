@@ -15,12 +15,11 @@ import static com.marlonb.hr_middleware.message.SuccessfulMessages.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("batch/v1")
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/admin/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<TokenResponseDto<String>> loginAdmin (@Valid @RequestBody
                                                                       LoginRequestDto loginRequest) {
 

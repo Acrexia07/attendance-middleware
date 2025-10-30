@@ -75,7 +75,7 @@ public class AuthControllerUnitTests {
 
             String jsonValidCredentials = mapper.writeValueAsString(testLogin);
 
-            mockMvc.perform(post("/batch/v1/admin/login")
+            mockMvc.perform(post("/auth/login")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(jsonValidCredentials))
@@ -100,7 +100,7 @@ public class AuthControllerUnitTests {
 
             String jsonInvalidCredentials = mapper.writeValueAsString(invalidTestLogin);
 
-            mockMvc.perform(post("/batch/v1/admin/login")
+            mockMvc.perform(post("/auth/login")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(jsonInvalidCredentials))
