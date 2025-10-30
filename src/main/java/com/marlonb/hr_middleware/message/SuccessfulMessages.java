@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SuccessfulMessages {
 
-    LOGIN_SUCCESS_MESSAGE("Admin login successfully");
+    LOGIN_SUCCESS_MESSAGE("Admin login successfully"),
+    CREATE_SUCCESS_MESSAGE("Admin created successfully");
 
     private final String message;
 }
