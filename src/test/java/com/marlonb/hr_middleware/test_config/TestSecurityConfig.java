@@ -23,7 +23,7 @@ public class TestSecurityConfig {
 
         return http.csrf(AbstractHttpConfigurer::disable)
                    .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/batch/v1/admin/login").permitAll())
+                        .requestMatchers("/auth/login").permitAll())
                 .build();
     }
 }
