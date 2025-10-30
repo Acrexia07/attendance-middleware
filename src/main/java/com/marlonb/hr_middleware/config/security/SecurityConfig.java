@@ -34,7 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
 
         return http.authorizeHttpRequests(auth -> auth
-                                    .requestMatchers("/auth/login").permitAll())
+                                    .requestMatchers("/auth/login").permitAll()
+                                    .requestMatchers("/admin/register").authenticated())
                    // Disable CSRF (we rely on JWT for stateless auth)
                    .csrf(AbstractHttpConfigurer::disable)
                    // Handles exception related to authentications
