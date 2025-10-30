@@ -1,9 +1,9 @@
-package com.marlonb.hr_middleware.utils;
+package com.marlonb.hr_middleware.utils.excel;
 
 import com.marlonb.hr_middleware.model.data.AttendanceData;
 import org.apache.poi.ss.usermodel.Row;
 
-import static com.marlonb.hr_middleware.utils.ExcelCellValueHelper.*;
+import static com.marlonb.hr_middleware.utils.excel.ExcelCellValueHelper.*;
 
 public class ExcelCellValueSetter {
 
