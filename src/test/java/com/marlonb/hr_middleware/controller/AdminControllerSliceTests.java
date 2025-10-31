@@ -1,6 +1,7 @@
 package com.marlonb.hr_middleware.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
 import com.marlonb.hr_middleware.security.AdminUserDetailsService;
@@ -8,6 +9,7 @@ import com.marlonb.hr_middleware.security.JwtService;
 import com.marlonb.hr_middleware.service.AdminService;
 import com.marlonb.hr_middleware.test_config.TestSecurityConfig;
 import com.marlonb.hr_middleware.test_data.Admin1;
+import com.marlonb.hr_middleware.test_data.Admin2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +24,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static com.marlonb.hr_middleware.exception.enums.ExceptionMessages.*;
+import static com.marlonb.hr_middleware.message.ErrorMessages.*;
 import static com.marlonb.hr_middleware.message.SuccessfulMessages.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -83,6 +88,55 @@ public class AdminControllerSliceTests {
                            jsonPath("$.message").value(CREATE_SUCCESS_MESSAGE.getMessage()),
                            jsonPath("$.data.username").value(testAdminRequest.getUsername())
                    );
+        }
+
+        @Test
+        @WithMockUser(username = "1")
+        @DisplayName("Should pass response successfully when retrieve all admin accounts")
+        void shouldPassResponseSuccessfullyWhenRetrieveAllAdminAccounts () throws Exception {
+
+            AdminResponseDto testAdmin1Response = Admin1.sampleAdmin1Response();
+            AdminResponseDto testAdmin2Response = Admin2.sampleAdmin2Response();
+
+            List<AdminResponseDto> listOfAdminAccounts =
+                    List.of(testAdmin1Response, testAdmin2Response);
+
+            when(adminService.retrieveAllAdminData())
+                    .thenReturn(listOfAdminAccounts);
+
+            String jsonAdminResponse = mapper.writeValueAsString(listOfAdminAccounts);
+
+            mockMvc.perform(get("/admins")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonAdminResponse))
+                   .andExpectAll(
+                           status().isOk(),
+                           jsonPath("$.message").value(READ_ALL_SUCCESS_MESSAGE.getMessage()),
+                           jsonPath("$.data").isArray(),
+                           jsonPath("$.data.length()").value(2)
+            );
+        }
+
+        @Test
+        @WithMockUser(username = "1")
+        @DisplayName("Should pass response successfully when retrieve specific admin account")
+        void shouldPassResponseSuccessfullyWhenRetrieveSpecificAdminAccount () throws Exception {
+
+            final long testAdminId = testAdminResponseAfterRequest.id();
+
+            when(adminService.retrieveSpecificAdmin(testAdminId))
+                    .thenReturn(testAdminResponseAfterRequest);
+
+            String jsonAdminResponse = mapper.writeValueAsString(testAdminResponseAfterRequest);
+
+            mockMvc.perform(get("/admins/{id}", testAdminId)
+                            .content(jsonAdminResponse)
+                            .contentType(MediaType.APPLICATION_JSON))
+                   .andExpectAll(
+                           status().isOk(),
+                           jsonPath("$.message").value(READ_SUCCESS_MESSAGE.getMessage()),
+                           jsonPath("$.data.id").value(testAdminResponseAfterRequest.id()),
+                           jsonPath("$.data.username").value(testAdminResponseAfterRequest.username()));
         }
     }
 
@@ -157,6 +211,29 @@ public class AdminControllerSliceTests {
                                 jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage())
 
                         );
+            }
+        }
+
+        @Nested
+        class ReadAdminValidationTests {
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when read specific admin has id that does not exists")
+            void shouldFailWhenReadSpecificAdminHasIdThatDoesNotExists () throws Exception {
+
+                final long nonExistentId = 999L;
+                final String RESOURCE_NOT_FOUND_MESSAGE =
+                        String.format(RESOURCE_NOT_FOUND.getErrorMessage(), nonExistentId);
+
+                when(adminService.retrieveSpecificAdmin(nonExistentId))
+                        .thenThrow(new ResourceNotFoundException
+                                    (RESOURCE_NOT_FOUND_MESSAGE));
+
+                mockMvc.perform(get("/admins/{id}", nonExistentId))
+                       .andExpectAll(
+                               status().isNotFound(),
+                               jsonPath("$.errors.resource").value(RESOURCE_NOT_FOUND_MESSAGE));
             }
         }
     }
