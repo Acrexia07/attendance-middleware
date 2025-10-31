@@ -24,7 +24,7 @@ public class TestSecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                    .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/admin/register").authenticated())
+                        .requestMatchers("/admins/register").authenticated())
                 .build();
     }
 }

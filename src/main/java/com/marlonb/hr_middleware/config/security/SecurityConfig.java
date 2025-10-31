@@ -35,7 +35,7 @@ public class SecurityConfig {
 
         return http.authorizeHttpRequests(auth -> auth
                                     .requestMatchers("/auth/login").permitAll()
-                                    .requestMatchers("/admin/register").authenticated())
+                                    .requestMatchers("/admins/register").authenticated())
                    // Disable CSRF (we rely on JWT for stateless auth)
                    .csrf(AbstractHttpConfigurer::disable)
                    // Handles exception related to authentications

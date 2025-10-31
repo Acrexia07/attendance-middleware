@@ -72,14 +72,14 @@ public class AdminControllerSliceTests {
 
             String jsonAdminRequest = mapper.writeValueAsString(testAdminRequest);
 
-            mockMvc.perform(post("/admin/register")
+            mockMvc.perform(post("/admins/register")
                             .with(csrf())
                             .content(jsonAdminRequest)
                             .contentType(MediaType.APPLICATION_JSON))
                    .andExpectAll(
                            status().isCreated(),
                            header().exists("Location"),
-                           header().string("Location", containsString("/admin/register/")),
+                           header().string("Location", containsString("/admins/register/")),
                            jsonPath("$.message").value(CREATE_SUCCESS_MESSAGE.getMessage()),
                            jsonPath("$.data.username").value(testAdminRequest.getUsername())
                    );
@@ -104,7 +104,7 @@ public class AdminControllerSliceTests {
 
                 String jsonInvalidRequest = mapper.writeValueAsString(invalidRequest);
 
-                mockMvc.perform(post("/admin/register")
+                mockMvc.perform(post("/admins/register")
                                 .with(csrf())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(jsonInvalidRequest))
@@ -126,7 +126,7 @@ public class AdminControllerSliceTests {
 
                 String jsonInvalidRequest = mapper.writeValueAsString(invalidRequest);
 
-                mockMvc.perform(post("/admin/register")
+                mockMvc.perform(post("/admins/register")
                                 .with(csrf())
                                 .content(jsonInvalidRequest)
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -148,7 +148,7 @@ public class AdminControllerSliceTests {
 
                 String jsonInvalidRequest = mapper.writeValueAsString(invalidRequest);
 
-                mockMvc.perform(post("/admin/register")
+                mockMvc.perform(post("/admins/register")
                                 .with(csrf())
                                 .content(jsonInvalidRequest)
                                 .contentType(MediaType.APPLICATION_JSON))
