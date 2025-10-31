@@ -18,7 +18,7 @@ import static com.marlonb.hr_middleware.message.SuccessfulMessages.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 public class AdminController {
 
     private final AdminService adminService;
@@ -28,7 +28,7 @@ public class AdminController {
                                                                          AdminRequestDto adminRequest) {
 
         AdminResponseDto response = adminService.createAdmin(adminRequest);
-        URI location = URI.create("/admin/register/" + response.id());
+        URI location = URI.create("/admins/register/" + response.id());
 
         return ResponseEntity.created(location)
                              .body(new ApiResponseDto<>
