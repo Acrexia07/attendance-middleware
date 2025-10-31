@@ -22,6 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.marlonb.hr_middleware.exception.enums.ExceptionMessages.*;
 import static com.marlonb.hr_middleware.message.SuccessfulMessages.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -82,6 +83,81 @@ public class AdminControllerSliceTests {
                            jsonPath("$.message").value(CREATE_SUCCESS_MESSAGE.getMessage()),
                            jsonPath("$.data.username").value(testAdminRequest.getUsername())
                    );
+        }
+    }
+
+    @Nested
+    class NegativeTests {
+
+        @Nested
+        class CreateAdminValidationTests {
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when create admin request has invalid username")
+            void shouldFailWhenCreateAdminRequestHasInvalidUsername() throws Exception {
+
+                AdminRequestDto invalidRequest = Admin1.sampleRequestWithInvalidUsername();
+
+                when(adminService.createAdmin(invalidRequest))
+                        .thenReturn(testAdminResponseAfterRequest);
+
+                String jsonInvalidRequest = mapper.writeValueAsString(invalidRequest);
+
+                mockMvc.perform(post("/admin/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonInvalidRequest))
+                        .andExpectAll(
+                                status().isBadRequest(),
+                                jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage()),
+                                jsonPath("$.errors.username").isNotEmpty());
+            }
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when create admin request has invalid password")
+            void shouldFailWhenCreateAdminRequestHasInvalidPassword () throws Exception {
+
+                AdminRequestDto invalidRequest = Admin1.sampleRequestWithInvalidPassword();
+
+                when(adminService.createAdmin(invalidRequest))
+                        .thenReturn(testAdminResponseAfterRequest);
+
+                String jsonInvalidRequest = mapper.writeValueAsString(invalidRequest);
+
+                mockMvc.perform(post("/admin/register")
+                                .with(csrf())
+                                .content(jsonInvalidRequest)
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpectAll(
+                                status().isBadRequest(),
+                                jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage()),
+                                jsonPath("$.errors.password").isNotEmpty());
+            }
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when create admin request has missing field")
+            void shouldFailWhenCreateAdminRequestHasMissingField () throws Exception {
+
+                AdminRequestDto invalidRequest = Admin1.sampleRequestWithMissingField();
+
+                when(adminService.createAdmin(invalidRequest))
+                        .thenReturn(testAdminResponseAfterRequest);
+
+                String jsonInvalidRequest = mapper.writeValueAsString(invalidRequest);
+
+                mockMvc.perform(post("/admin/register")
+                                .with(csrf())
+                                .content(jsonInvalidRequest)
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpectAll(
+                                status().isBadRequest(),
+                                jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage())
+
+                        );
+            }
         }
     }
 }
