@@ -8,11 +8,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 import static com.marlonb.hr_middleware.message.SuccessfulMessages.*;
 
@@ -34,5 +33,25 @@ public class AdminController {
                              .body(new ApiResponseDto<>
                                      (CREATE_SUCCESS_MESSAGE.getMessage(),
                                       response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponseDto<List<AdminResponseDto>>> retrieveAllAdmins () {
+
+        List<AdminResponseDto> response = adminService.retrieveAllAdminData();
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>
+                                        (READ_ALL_SUCCESS_MESSAGE.getMessage(),
+                                         response));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponseDto<AdminResponseDto>> retrieveAdmin (@PathVariable Long id) {
+
+        AdminResponseDto response = adminService.retrieveSpecificAdmin(id);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>
+                                        (READ_SUCCESS_MESSAGE.getMessage(),
+                                         response));
     }
 }
