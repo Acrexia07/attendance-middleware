@@ -100,4 +100,29 @@ public class Admin1 {
                 INVALID_ADMIN_PASSWORD
         );
     }
+
+    // INVALID REQUEST
+    public static AdminRequestDto sampleRequestWithInvalidUsername () {
+
+        return new AdminRequestDto(
+                INVALID_ADMIN_USERNAME_FORMAT,
+                ADMIN_PASSWORD
+        );
+    }
+
+    public static AdminRequestDto sampleRequestWithInvalidPassword () {
+
+        return new AdminRequestDto(
+                ADMIN_USERNAME,
+                INVALID_ADMIN_PASSWORD
+        );
+    }
+
+    public static AdminRequestDto sampleRequestWithMissingField () {
+
+        return new AdminRequestDto(
+                ADMIN_USERNAME,
+                null
+        );
+    }
 }
