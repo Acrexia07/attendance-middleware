@@ -21,7 +21,7 @@ public class Admin1 {
 
     // UPDATED VALUES
     private static final String UPDATE_ADMIN_USERNAME = "admin@123";
-    private static final String UPDATE_ADMIN_PASSWORD = "test@123";
+    private static final String UPDATE_ADMIN_PASSWORD = "Test@123";
 
     // INVALID VALUES
     private static final String INVALID_ADMIN_PASSWORD = "invalidPass";
@@ -121,6 +121,31 @@ public class Admin1 {
     public static AdminRequestDto sampleRequestWithMissingField () {
 
         return new AdminRequestDto(
+                ADMIN_USERNAME,
+                null
+        );
+    }
+
+    // INVALID UPDATE
+    public static AdminUpdateDto sampleUpdateWithInvalidUsername () {
+
+        return new AdminUpdateDto(
+                INVALID_ADMIN_USERNAME_FORMAT,
+                ADMIN_PASSWORD
+        );
+    }
+
+    public static AdminUpdateDto sampleUpdateWithInvalidPassword () {
+
+        return new AdminUpdateDto(
+                ADMIN_USERNAME,
+                INVALID_ADMIN_PASSWORD_FORMAT
+        );
+    }
+
+    public static AdminUpdateDto sampleUpdateWithMissingField () {
+
+        return new AdminUpdateDto(
                 ADMIN_USERNAME,
                 null
         );
