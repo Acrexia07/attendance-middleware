@@ -2,6 +2,7 @@ package com.marlonb.hr_middleware.controller;
 
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
+import com.marlonb.hr_middleware.model.dto.AdminUpdateDto;
 import com.marlonb.hr_middleware.service.AdminService;
 import com.marlonb.hr_middleware.utils.response.ApiResponseDto;
 import jakarta.validation.Valid;
@@ -52,6 +53,18 @@ public class AdminController {
 
         return ResponseEntity.ok().body(new ApiResponseDto<>
                                         (READ_SUCCESS_MESSAGE.getMessage(),
+                                         response));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponseDto<AdminResponseDto>> updateAdmin (@PathVariable Long id,
+                                                                         @Valid @RequestBody
+                                                                         AdminUpdateDto adminUpdate) {
+
+        AdminResponseDto response = adminService.updateAdmin(id, adminUpdate);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>
+                                        (UPDATE_SUCCESS_MESSAGE.getMessage(),
                                          response));
     }
 }

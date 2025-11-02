@@ -65,6 +65,7 @@ public class AdminService {
         return adminMapper.toResponse(foundAdmin);
     }
 
+    @Transactional
     public AdminResponseDto updateAdmin(long id,
                                         @Valid @RequestBody AdminUpdateDto adminUpdate) {
 

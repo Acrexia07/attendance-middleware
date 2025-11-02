@@ -2,8 +2,10 @@ package com.marlonb.hr_middleware.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marlonb.hr_middleware.exception.custom.ResourceNotFoundException;
+import com.marlonb.hr_middleware.model.admin.AdminAccount;
 import com.marlonb.hr_middleware.model.dto.AdminRequestDto;
 import com.marlonb.hr_middleware.model.dto.AdminResponseDto;
+import com.marlonb.hr_middleware.model.dto.AdminUpdateDto;
 import com.marlonb.hr_middleware.security.AdminUserDetailsService;
 import com.marlonb.hr_middleware.security.JwtService;
 import com.marlonb.hr_middleware.service.AdminService;
@@ -33,6 +35,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,11 +60,18 @@ public class AdminControllerSliceTests {
 
     private AdminRequestDto testAdminRequest;
     private AdminResponseDto testAdminResponseAfterRequest;
+    private AdminAccount testAdmin;
+    private AdminUpdateDto testAdminUpdate;
+    private AdminResponseDto testAdminResponseAfterUpdate;
 
     @BeforeEach
     void setup() {
         testAdminRequest = Admin1.sampleAdmin1Request();
         testAdminResponseAfterRequest = Admin1.sampleAdmin1Response();
+
+        testAdmin = Admin1.sampleAdmin1Data();
+        testAdminUpdate = Admin1.sampleAdmin1Update();
+        testAdminResponseAfterUpdate = Admin1.sampleAdmin1ResponseAfterUpdate();
     }
 
     @Nested
@@ -137,6 +147,25 @@ public class AdminControllerSliceTests {
                            jsonPath("$.message").value(READ_SUCCESS_MESSAGE.getMessage()),
                            jsonPath("$.data.id").value(testAdminResponseAfterRequest.id()),
                            jsonPath("$.data.username").value(testAdminResponseAfterRequest.username()));
+        }
+
+        @Test
+        @WithMockUser(username = "1")
+        @DisplayName("Should pass response successfully when update specific admin account")
+        void shouldPassResponseSuccessfullyWhenUpdateSpecificAdminAccount () throws Exception {
+
+            when(adminService.updateAdmin(testAdmin.getId(), testAdminUpdate))
+                    .thenReturn(testAdminResponseAfterUpdate);
+
+            String jsonAdminUpdate = mapper.writeValueAsString(testAdminUpdate);
+
+            mockMvc.perform(put("/admins/{id}", testAdminResponseAfterUpdate.id())
+                            .with(csrf())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonAdminUpdate))
+                   .andExpectAll(
+                           status().isOk(),
+                           jsonPath("$.message").value(UPDATE_SUCCESS_MESSAGE.getMessage()));
         }
     }
 
@@ -234,6 +263,70 @@ public class AdminControllerSliceTests {
                        .andExpectAll(
                                status().isNotFound(),
                                jsonPath("$.errors.resource").value(RESOURCE_NOT_FOUND_MESSAGE));
+            }
+        }
+
+        @Nested
+        class UpdateAdminValidationTests {
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when update admin has invalid username")
+            void shouldFailWhenUpdateAdminHasInvalidUsername () throws Exception {
+
+                final Long testAdminId = testAdmin.getId();
+                AdminUpdateDto testInvalidUpdate = Admin1.sampleUpdateWithInvalidUsername();
+
+                String jsonInvalidUpdate = mapper.writeValueAsString(testInvalidUpdate);
+
+                mockMvc.perform(put("/admins/{id}", testAdminId)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonInvalidUpdate))
+                        .andDo(print())
+                       .andExpectAll(
+                               status().isBadRequest(),
+                               jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage()),
+                               jsonPath("$.errors.username").isNotEmpty());
+            }
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when update admin has invalid password")
+            void shouldFailWhenUpdateAdminHasInvalidPassword () throws Exception {
+
+                final Long testAdminId = testAdmin.getId();
+                AdminUpdateDto invalidUpdate = Admin1.sampleUpdateWithInvalidPassword();
+
+                String jsonInvalidRequest = mapper.writeValueAsString(invalidUpdate);
+
+                mockMvc.perform(put("/admins/{id}", testAdminId)
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonInvalidRequest))
+                       .andExpectAll(
+                               status().isBadRequest(),
+                               jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage()),
+                               jsonPath("$.errors.password").isNotEmpty());
+            }
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail when update admin has missing field")
+            void shouldFailWhenUpdateAdminHasMissingField () throws Exception {
+
+                final Long testAdminId = testAdmin.getId();
+                AdminUpdateDto invalidUpdate = Admin1.sampleUpdateWithMissingField();
+
+                String jsonInvalidUpdate = mapper.writeValueAsString(invalidUpdate);
+
+                mockMvc.perform(put("/admins/{id}", testAdminId)
+                                .with(csrf())
+                                .content(jsonInvalidUpdate)
+                                .contentType(MediaType.APPLICATION_JSON))
+                       .andExpectAll(
+                               status().isBadRequest(),
+                               jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage()));
             }
         }
     }

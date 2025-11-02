@@ -10,7 +10,8 @@ public enum SuccessfulMessages {
     LOGIN_SUCCESS_MESSAGE("Admin login successfully"),
     CREATE_SUCCESS_MESSAGE("Admin created successfully"),
     READ_ALL_SUCCESS_MESSAGE("All admins retrieved successfully"),
-    READ_SUCCESS_MESSAGE("Specific admin retrieved successfully");
+    READ_SUCCESS_MESSAGE("Specific admin retrieved successfully"),
+    UPDATE_SUCCESS_MESSAGE("Specific admin updated successfully");
 
     private final String message;
 }
