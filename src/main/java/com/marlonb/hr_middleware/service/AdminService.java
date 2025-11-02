@@ -65,7 +65,8 @@ public class AdminService {
         return adminMapper.toResponse(foundAdmin);
     }
 
-    public AdminResponseDto updateAdmin(long id, AdminUpdateDto adminUpdate) {
+    public AdminResponseDto updateAdmin(long id,
+                                        @Valid @RequestBody AdminUpdateDto adminUpdate) {
 
         AdminAccount foundAdmin = findAdminId(id);
 
