@@ -328,6 +328,32 @@ public class AdminControllerSliceTests {
                                status().isBadRequest(),
                                jsonPath("$.message").value(VALIDATION_ERROR_MESSAGE.getErrorMessage()));
             }
+
+            @Test
+            @WithMockUser(username = "1")
+            @DisplayName("Should fail on update when admin id do not exist")
+            void shouldFailOnUpdateWhenAdminIdDoNotExist () throws Exception {
+
+                final Long nonExistentId = 999L;
+                final String RESOURCE_NOT_FOUND_MESSAGE =
+                        String.format(RESOURCE_NOT_FOUND.getErrorMessage(), nonExistentId);
+
+                AdminUpdateDto testAdminUpdate = Admin1.sampleAdmin1Update();
+
+                when(adminService.updateAdmin(nonExistentId, testAdminUpdate))
+                        .thenThrow(new ResourceNotFoundException
+                                   (RESOURCE_NOT_FOUND_MESSAGE));
+
+                String jsonAdminUpdate = mapper.writeValueAsString(testAdminUpdate);
+
+                mockMvc.perform(put("/admins/{id}", nonExistentId)
+                                .with(csrf())
+                                .content(jsonAdminUpdate)
+                                .contentType(MediaType.APPLICATION_JSON))
+                       .andExpectAll(
+                               status().isNotFound()
+                       );
+            }
         }
     }
 }
